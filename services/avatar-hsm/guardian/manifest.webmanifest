@@ -1,0 +1,10 @@
+{
+  "id": "/",
+  "name": "보호자 안부 확인",
+  "short_name": "안부 확인",
+  "lang": "ko",
+  "start_url": "/",
+  "display": "standalone",
+  "theme_color": "#153b34",
+  "background_color": "#f1f7f4"
+}

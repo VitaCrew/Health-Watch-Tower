@@ -111,3 +111,7 @@ AI가 공통 `/mcp`에서 계획을 조회하고 실제 수행을 기록합니�
 - AI는 사용자가 허용한 범위에서 기록을 읽거나 남길 수 있습니다.
 - AI가 제출한 검토 요청은 저장된 기록에 연결되며, Health Watch Tower는 현재 권한을 확인해 담당자를 배정합니다.
 - 동의를 철회하면 해당 범위에서 AI가 새로 요청하는 접근이 차단됩니다. [AI 접근 권한과 동의 철회](example/ai-access-and-consent.md)
+
+## Run the server
+
+See the [runtime setup](docs/runtime.md) for the standalone MCP server and PostgreSQL.
