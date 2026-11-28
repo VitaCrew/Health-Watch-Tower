@@ -1,0 +1,17 @@
+model
+  schema 1.1
+
+type user
+
+type person
+  relations
+    define owner: [user]
+    define caregiver: [user]
+    define clinician: [user]
+    define trainer: [user]
+    define nutritionist: [user]
+
+    # The graph answers relationship; Watch Tower separately requires a live
+    # per-client consent grant before any record read or write.
+    define can_read: owner or caregiver or clinician or trainer or nutritionist
+    define can_write: owner or caregiver or clinician

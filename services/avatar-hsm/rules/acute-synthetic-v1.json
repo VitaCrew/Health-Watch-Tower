@@ -1,0 +1,25 @@
+{
+  "nodes": [
+    { "id": "input", "name": "Synthetic signal", "type": "inputNode", "content": {} },
+    {
+      "id": "classify",
+      "name": "Synthetic Acute classification",
+      "type": "expressionNode",
+      "content": {
+        "passThrough": false,
+        "expressions": [
+          {
+            "id": "emit",
+            "key": "emit",
+            "value": "kind in [\"synthetic_fall\", \"synthetic_cardiac_flag\"]"
+          }
+        ]
+      }
+    },
+    { "id": "output", "name": "Decision result", "type": "outputNode", "content": {} }
+  ],
+  "edges": [
+    { "id": "input-rule", "sourceId": "input", "targetId": "classify" },
+    { "id": "rule-output", "sourceId": "classify", "targetId": "output" }
+  ]
+}

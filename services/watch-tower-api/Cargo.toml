@@ -1,0 +1,31 @@
+[package]
+name = "watch-tower-api"
+version = "0.1.0"
+edition = "2021"
+publish = false
+
+[workspace]
+
+[dependencies]
+anyhow = "1"
+axum = "0.8"
+base64 = "0.22"
+chrono = { version = "0.4", features = ["serde"] }
+avatar-hsm = { path = "../avatar-hsm" }
+avatar-fitness = { path = "../fitness" }
+deadpool-postgres = "0.14.2"
+reqwest = { version = "0.12", default-features = false, features = ["json", "rustls-tls"] }
+ring = "0.17"
+serde = { version = "1", features = ["derive"] }
+serde_json = "1"
+subtle = "2"
+tokio-postgres = { version = "0.7", features = ["with-chrono-0_4", "with-serde_json-1"] }
+tokio = { version = "1", features = ["macros", "net", "rt-multi-thread", "signal", "sync", "time"] }
+watch-tower-core = { path = "../watch-tower-core" }
+fitparser = "=0.11.0"
+flate2 = "1"
+fhir = { version = "=4.2.4", default-features = false, features = ["r4"] }
+quick-xml = "=0.42.0"
+zip = { version = "=9.8.1", default-features = false, features = ["deflate"] }
+
+[dev-dependencies]

@@ -1,0 +1,1 @@
+ALTER TABLE avatar_hsm.wearable_oauth_connection ADD COLUMN garmin_retry_after timestamptz;

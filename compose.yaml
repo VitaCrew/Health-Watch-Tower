@@ -1,0 +1,61 @@
+name: health-watch-tower
+
+services:
+  watch-tower-postgres:
+    image: postgres:17
+    environment:
+      POSTGRES_DB: watchtower
+      POSTGRES_USER: watchtower
+      POSTGRES_PASSWORD: ${WATCH_TOWER_DB_PASSWORD:?Set WATCH_TOWER_DB_PASSWORD}
+    volumes:
+      - watch-tower-postgres:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U watchtower -d watchtower"]
+      interval: 5s
+      timeout: 3s
+      retries: 20
+
+  watch-tower-api:
+    build:
+      context: .
+      dockerfile: services/watch-tower-api/Dockerfile
+    image: health-watch-tower:local
+    environment:
+      AVATAR_HSM_DATABASE_URL: postgres://watchtower:${WATCH_TOWER_DB_PASSWORD:?Set WATCH_TOWER_DB_PASSWORD}@watch-tower-postgres:5432/watchtower
+      AVATAR_HSM_READ_TOKEN: ${AVATAR_HSM_READ_TOKEN:?Set AVATAR_HSM_READ_TOKEN}
+      AVATAR_HSM_CONTROL_TOKEN: ${AVATAR_HSM_CONTROL_TOKEN:?Set AVATAR_HSM_CONTROL_TOKEN}
+      FITNESS_OWNER_ID: ${FITNESS_OWNER_ID:?Set FITNESS_OWNER_ID}
+      WATCH_TOWER_BIND_ADDRESS: 0.0.0.0:17842
+      WATCH_TOWER_START_ETL_WORKERS: "1"
+      WATCH_TOWER_ALLOW_DEV_BEARERS: "0"
+      WATCH_TOWER_ALLOW_PRIVATE_SERVICE_BEARERS: "1"
+      WATCH_TOWER_REQUIRE_OPENHUMAN_IDENTITY: ${WATCH_TOWER_REQUIRE_OPENHUMAN_IDENTITY:-1}
+      WATCH_TOWER_OIDC_ISSUER: ${WATCH_TOWER_OIDC_ISSUER:-}
+      WATCH_TOWER_OIDC_AUDIENCE: ${WATCH_TOWER_OIDC_AUDIENCE:-}
+      WATCH_TOWER_OIDC_JWKS_URL: ${WATCH_TOWER_OIDC_JWKS_URL:-}
+      WATCH_TOWER_OIDC_CLIENT_IDS: ${WATCH_TOWER_OIDC_CLIENT_IDS:-}
+      WATCH_TOWER_PUBLIC_URL: ${WATCH_TOWER_PUBLIC_URL:-}
+      AVATAR_WEARABLE_PUBLIC_URL: ${AVATAR_WEARABLE_PUBLIC_URL:-}
+      AVATAR_OURA_CLIENT_ID: ${AVATAR_OURA_CLIENT_ID:-}
+      AVATAR_OURA_CLIENT_SECRET: ${AVATAR_OURA_CLIENT_SECRET:-}
+      AVATAR_OURA_WEBHOOK_VERIFY_TOKEN: ${AVATAR_OURA_WEBHOOK_VERIFY_TOKEN:-}
+      AVATAR_COROS_ACCESS_TOKEN: ${AVATAR_COROS_ACCESS_TOKEN:-}
+      AVATAR_COROS_OPEN_ID: ${AVATAR_COROS_OPEN_ID:-}
+      AVATAR_COROS_FIT_HOSTS: ${AVATAR_COROS_FIT_HOSTS:-}
+      OPENFGA_API_URL: ${OPENFGA_API_URL:-}
+      OPENFGA_STORE_ID: ${OPENFGA_STORE_ID:-}
+      OPENFGA_AUTHORIZATION_MODEL_ID: ${OPENFGA_AUTHORIZATION_MODEL_ID:-}
+      OPENFGA_API_TOKEN: ${OPENFGA_API_TOKEN:-}
+    depends_on:
+      watch-tower-postgres:
+        condition: service_healthy
+    ports:
+      - "127.0.0.1:17842:17842"
+    healthcheck:
+      test: ["CMD", "curl", "-fsS", "http://127.0.0.1:17842/healthz"]
+      interval: 5s
+      timeout: 3s
+      retries: 20
+
+volumes:
+  watch-tower-postgres:

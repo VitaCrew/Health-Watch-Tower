@@ -1,0 +1,32 @@
+[package]
+name = "avatar-hsm"
+version = "0.1.0"
+edition = "2021"
+publish = false
+
+[workspace]
+
+[dependencies]
+anyhow = "1"
+base64 = "0.22"
+axum = "0.8"
+chrono = { version = "0.4", features = ["serde"] }
+deadpool-postgres = "0.14.2"
+reqwest = { version = "0.12", default-features = false, features = ["http2", "json", "rustls-tls"] }
+ring = "0.17"
+serde = { version = "1", features = ["derive"] }
+serde_json = "1"
+serde_urlencoded = "0.7"
+subtle = "2"
+web-push-native = "=0.5.0"
+tokio = { version = "1", features = ["macros", "net", "rt-multi-thread", "signal", "sync", "time"] }
+tokio-postgres = { version = "0.7", features = ["with-chrono-0_4", "with-serde_json-1"] }
+zen-engine = "=2.1.8"
+zip = { version = "=9.8.1", default-features = false, features = ["deflate"] }
+quick-xml = "=0.42.0"
+watch-tower-core = { path = "../watch-tower-core" }
+
+[dev-dependencies]
+axum = { version = "0.8", features = ["http2"] }
+fitparser = "=0.11.0"
+flate2 = "1"
