@@ -13,12 +13,93 @@
 <p align="center">
   <a href="#로컬에서-실행"><strong>로컬에서 실행</strong></a> ·
   <a href="#ai-연결"><strong>AI 연결</strong></a> ·
+  <a href="#사용-예시"><strong>사용 예시</strong></a> ·
   <a href="#작동-방식"><strong>작동 방식</strong></a>
 </p>
 
 <p align="center">
   <img src="vitacrew-overview.png" width="880" alt="Vitacrew가 구상하는 AI 건강팀 콘셉트 이미지">
 </p>
+
+## Overview
+
+Health Watch Tower는 개인 건강정보, 의료기관 진료정보, 외부 정보를 한곳에 모아 AI가 일상 건강관리에 활용할 수 있도록 연결합니다.
+
+| 단계 | 어떻게 작동하나요? |
+| --- | --- |
+| **수집** | 수면·운동·식사·복약 등 개인 건강정보, 연동된 의료기관의 진료정보, 운동 기록에 포함된 기온·습도 등 외부 정보를 모읍니다. |
+| **연결** | Watch Tower가 들어온 기록을 검증하고 개인 건강 상태에 반영해 AI가 활용할 수 있도록 연결합니다. |
+| **활용** | AI가 예정된 계획과 실제 수행을 연결합니다. 지난 기록을 다음 확인에 다시 사용하거나 권한이 있는 담당자에게 검토를 요청할 수 있습니다. |
+
+```mermaid
+flowchart LR
+    subgraph Sources["수집 가능 데이터"]
+        direction TB
+        Clinical["`**의료기관 진료정보**
+        진료기록 · 검사 결과
+        처방 · 알레르기`"]
+        Personal["`**개인 건강정보**
+        수면 · 운동 · 식사 · 복약
+        웨어러블 및 직접 기록`"]
+        External["`**외부 정보**
+        운동 기록에 포함된
+        기온 · 습도 등 환경 정보`"]
+        Clinical ~~~ Personal ~~~ External
+    end
+
+    Hub(("`**Health Watch Tower**
+    기록 검증 · 건강 상태 갱신
+
+    **AI**
+    건강 기록 조회 · 수행 기록`"))
+
+    subgraph Services["활용 서비스"]
+        direction TB
+        Records["`**내 건강정보 모아보기**
+        일상 건강 기록과
+        진료·검사 기록 확인`"]
+        Routine["`**내 건강 스스로 챙기기**
+        운동 · 식사 · 복약 관리
+        계획과 실제 수행 비교`"]
+        FollowUp["`**다음 확인과 담당자 검토**
+        지난 수행 다시 확인
+        담당자에게 검토 요청`"]
+        Records ~~~ Routine ~~~ FollowUp
+    end
+
+    Sources --> Hub --> Services
+    classDef card fill:#fff,stroke:#fff,color:#172b3a
+    classDef hub fill:#eef9f6,stroke:#4e928c,stroke-width:2px,color:#163539
+    class Clinical,Personal,External,Records,Routine,FollowUp card
+    class Hub hub
+    style Sources fill:#eff5ff,stroke:#a8bee3,color:#173248
+    style Services fill:#f3efff,stroke:#b9afe1,color:#292349
+```
+
+**예시** · 운동을 마치고 AI에 이렇게 말할 수 있어요.
+
+> **나**　오늘 스쿼트 40kg으로 8회씩 2세트 했어. 기록해줘.
+>
+> **AI**　오늘 계획 3세트 중 수행한 2세트를 기록했어요. 다음 운동 전에 다시 확인할까요?
+
+## Quick Start
+
+### 로컬에서 실행
+
+Docker Compose와 별도로 확보한 런타임 소스가 필요합니다. 먼저 [로컬 실행 준비](docs/local-setup.md#환경-설정)에 따라 환경을 설정한 뒤, 소스 루트에서 PowerShell로 기동합니다.
+
+```powershell
+docker compose --env-file target/avatar-docker.env -f docker-compose.avatar-mvp.yml up -d
+curl.exe -f http://127.0.0.1:17842/healthz
+```
+
+`/healthz`가 HTTP 200을 반환하면 Health Watch Tower API가 준비된 상태입니다.
+
+### AI 연결
+
+로컬 **Watch Tower MCP** 주소는 `http://127.0.0.1:17842/mcp`입니다. AI는 이 인터페이스를 통해 건강 계획을 조회하고 수행을 기록합니다.
+
+개인 기록을 사용하려면 [계정 연결, 동의 및 OpenFGA 관계](docs/local-setup.md#개인-기록-접근-권한)를 먼저 설정합니다. 오늘 운동 계획을 준비한 뒤 AI에 **“오늘 운동 계획 보여줘”**라고 요청하면 등록된 운동 종목과 목표 세트·횟수를 확인할 수 있습니다.
 
 ## 사용 예시
 
@@ -36,57 +117,28 @@
 | [여러 기록을 함께 보는 사전 확인](example/combined-signal-check-in.md) | 수면과 운동 기록을 함께 살펴 다음 계획을 확인하도록 알리는 목표 시나리오입니다. |
 | [AI 접근 권한과 동의 철회](example/ai-access-and-consent.md) | 읽기 권한과 쓰기 권한이 요청 결과에 어떻게 반영되는지 확인합니다. |
 
-## 주요 기능
-
-| 할 수 있는 일 | 예시 |
-| --- | --- |
-| **건강 기록 모으기** | 웨어러블의 수면·활동 기록, 직접 남긴 식사·수분 일지와 복약 상태를 한곳에서 확인합니다. |
-| **계획과 실제 수행 비교하기** | 훈련 계획과 실제 운동 세트를 함께 봅니다. 수동으로 기록하거나 Strong·Hevy CSV를 가져올 수 있습니다. |
-| **바뀐 건강 상태 확인하기** | 새 기록이 반영된 뒤 최근 수면이나 하루 영양 합계를 다시 조회합니다. |
-| **다음 확인이나 검토로 넘기기** | 다음 운동 때 지난 수행을 다시 보거나, 저장된 기록에 권한 있는 담당자의 검토를 요청합니다. |
-
-## Quick Start
-
-### 로컬에서 실행
-
-**준비물**은 Docker Compose와 별도로 확보한 `openhuman-runtime/` 소스입니다. 아래 명령은 해당 소스의 루트 폴더에서 PowerShell로 실행합니다.
-
-1. 로컬 설정을 준비합니다. `target/avatar-docker.env`가 이미 있으면 기존 파일을 사용합니다.
-
-   ```powershell
-   if (!(Test-Path target/avatar-docker.env)) {
-       New-Item -ItemType Directory -Path target -Force | Out-Null
-       Copy-Item docs/avatar-mvp-compose.env.example target/avatar-docker.env
-   }
-   ```
-
-   새 파일이라면 여섯 필수 값을 로컬 테스트용 값으로 바꿉니다. 각 토큰에는 서로 다른 무작위 값을, OpenHuman 마스터 키에는 32바이트를 16진수로 표현한 64자리 값을 사용합니다.
-
-2. 플랫폼을 시작하고 Watch Tower API 응답을 확인합니다.
-
-   ```powershell
-   docker compose --env-file target/avatar-docker.env -f docker-compose.avatar-mvp.yml up -d
-   docker compose --env-file target/avatar-docker.env -f docker-compose.avatar-mvp.yml ps
-   curl.exe -f http://127.0.0.1:17842/healthz
-   ```
-
-   Compose는 PostgreSQL, Health Watch Tower API, OpenHuman 코어를 기동합니다. `/healthz`가 HTTP 200을 반환하면 Watch Tower API가 시작된 것입니다.
-
-종료할 때는 같은 Compose 설정으로 `stop`을 실행합니다.
-
-```powershell
-docker compose --env-file target/avatar-docker.env -f docker-compose.avatar-mvp.yml stop
-```
-
-### AI 연결
-
-**Watch Tower MCP** 주소는 `http://127.0.0.1:17842/mcp`입니다. OpenHuman 클라이언트를 사용할 경우 자체 호스팅 연결에 **코어 주소** `http://127.0.0.1:17790`과 `OPENHUMAN_DOCKER_CORE_TOKEN` 값을 입력합니다.
-
-사용자 연결, 동의, OpenFGA 관계를 설정한 뒤 오늘 날짜의 운동 계획을 준비하고 AI에 “오늘 운동 계획 보여줘”라고 요청해 보세요. [운동 계획과 실제 수행 예시](example/workout-plan-and-actual.md)
-
 ## 작동 방식
 
-[![Health Watch Tower 아키텍처. AI와 MCP에서 시작해 권한 확인과 기록 검증을 거쳐 규칙 판정, 상태 갱신, 담당자 배정, 과거 판정 재현으로 이어집니다.](docs/health-watch-tower-rules.png)](docs/health-watch-tower-rules.png)
+```mermaid
+flowchart TD
+    AI["AI 에이전트"] -->|"/mcp"| MCP["Watch Tower MCP"]
+    MCP -->|"권한 검사"| Access["권한 · 동의 · 감사"]
+    Access -->|"계획 연결"| Plan["계획과 실제 수행 연결"]
+    Access -->|"직접 기록"| Record["기록 검증과 상태 갱신"]
+    Plan -->|"연결한 기록"| Record
+
+    Record -.->|"검증된 기록"| Decision["건강 기록 판정"]
+    Rules["규칙 검토와 배포"] -.->|"승인된 규칙 보관"| Store["Watch Tower PostgreSQL"]
+    Decision -.->|"판정 결과 저장"| Store
+    Store -.->|"활성 규칙 버전"| Decision
+
+    Store -.->|"상태 이벤트"| HSM["HSM · 개인 건강 상태"]
+    Store -.->|"검토 요청 전달"| Followup["후속 업무 등록과 담당자 배정"]
+    Store -.->|"당시 입력과 규칙 버전"| Replay["과거 판정 재현과 후보 규칙 시험"]
+    Followup -->|"후속 확인 실행"| Workflow["AI 에이전트의 Cron · Workflow"]
+```
+
+실선은 현재 연결, 점선은 목표 설계의 연결입니다.
 
 AI가 공통 `/mcp`에서 계획을 조회하고 실제 수행을 기록합니다. Watch Tower는 권한과 동의를 확인하고, 연결할 계획이 있으면 계획 ID와 버전을 기록에 남깁니다. 기기에서 들어온 관측이나 계획 없이 남긴 기록도 검증을 거칩니다. **HSM(Health State Machine)**은 확정된 상태 변경을 개인 건강 상태에 반영합니다.
 
