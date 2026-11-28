@@ -1,0 +1,31 @@
+<!doctype html>
+<html lang="ko">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>OpenHuman 기기 계정 연결</title>
+<link rel="stylesheet" href="/wearables/portal.css">
+<script defer src="/wearables/portal.js"></script>
+<main>
+  <h1>기기 계정 연결</h1>
+  <label>제조사
+    <select id="provider">
+      <option value="google_health">Fitbit · Google Pixel Watch</option>
+      <option value="oura">Oura</option><option value="whoop">WHOOP</option><option value="strava">Strava</option>
+      <option value="polar">Polar</option><option value="suunto">Suunto</option><option value="withings">Withings</option>
+      <option value="ultrahuman">Ultrahuman</option><option value="sensorbio">Sensor Bio</option><option value="coros">COROS</option>
+      <option value="garmin">Garmin Connect · 사업자 연동</option>
+    </select>
+  </label>
+  <label>연결용 키 <input id="control" type="password" autocomplete="off"></label>
+  <label>조회용 키 <input id="read" type="password" autocomplete="off"></label>
+  <div class="actions"><button id="connect">제조사 계정 연결</button><button id="status">연결 상태 확인</button></div>
+  <fieldset>
+    <legend>과거 기록 가져오기</legend>
+    <label>시작 날짜 <input id="start" type="date"></label>
+    <label>마지막 날짜 <input id="end" type="date"></label>
+    <button id="sync">기록 가져오기</button>
+  </fieldset>
+  <button id="disconnect">연결 해제 및 가져온 기록 삭제</button>
+  <p id="result" role="status" aria-live="polite"></p>
+</main>
+</html>

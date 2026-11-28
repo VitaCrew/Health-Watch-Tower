@@ -1,0 +1,11 @@
+{
+  "name": "Synthetic Acute receipt smoke",
+  "graph": {
+    "name": "Synthetic Acute receipt smoke",
+    "nodes": [
+      { "id": "acute-event", "kind": "trigger", "name": "Synthetic Acute event" }
+    ],
+    "edges": []
+  },
+  "require_approval": true
+}

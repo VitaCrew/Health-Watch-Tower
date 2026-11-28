@@ -18,17 +18,13 @@
   <a href="#작동-방식"><strong>작동 방식</strong></a>
 </p>
 
-<p align="center">
-  <img src="vitacrew-overview.png" width="880" alt="Vitacrew가 구상하는 AI 건강팀 콘셉트 이미지">
-</p>
-
 ## Overview
 
 Health Watch Tower는 개인 건강정보, 의료기관 진료정보, 외부 정보를 한곳에 모아 AI가 일상 건강관리에 활용할 수 있도록 연결합니다.
 
 외부 정보에는 식약처의 식품 영양성분과 의약품 정보, Open Food Facts·USDA의 식품 데이터, Strong·Hevy에서 내보낸 운동 이력이 포함됩니다.
 
-[![데이터에서 Health Watch Tower와 AI를 거쳐 활용 서비스로 이어지는 개요. 의료기관 진료정보, 개인 건강정보, 외부 정보를 모아 기록을 검증하고 건강 상태에 반영합니다. AI는 기록을 조회하고 일상 건강관리, 후속 확인 및 담당자 검토에 활용합니다.](docs/assets/health-watch-tower-overview.svg)](docs/assets/health-watch-tower-overview.svg)
+![운동 계획 조회부터 수행 기록, 계획 비교, 다음 확인 및 담당자 검토까지의 흐름과 Health Watch Tower의 데이터 처리 및 활용 서비스 개요](docs/assets/health-watch-tower-overview.png)
 
 **예시** · 운동을 마치고 AI에 이렇게 말할 수 있어요.
 
@@ -203,3 +199,7 @@ Watch Tower는 권한과 동의를 확인한 뒤 운동·식사·복약·수면 
 | **식품의약품안전처 e약은요** | 제품명, 제조사, 효능·용법, 주의사항·상호작용·이상반응 등 공개 제품 정보 | 제품명 검색 · 공공데이터포털 API 키 |
 | **Open Food Facts** | 포장식품명, 바코드와 공급자가 제공한 영양성분 | 바코드 검색 |
 | **USDA FoodData Central** | 식품명, 기준량과 영양소 | 식품명 검색 · USDA API 키 |
+
+## Run the server
+
+See the [runtime setup](docs/runtime.md) for the standalone MCP server and PostgreSQL.

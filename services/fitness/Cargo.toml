@@ -1,0 +1,27 @@
+[package]
+name = "avatar-fitness"
+version = "0.1.0"
+edition = "2021"
+publish = false
+
+[workspace]
+
+[dependencies]
+anyhow = "1"
+axum = "0.8"
+chrono = { version = "0.4", features = ["serde"] }
+chrono-tz = "0.10"
+csv = "1"
+deadpool-postgres = "0.14.2"
+serde = { version = "1", features = ["derive"] }
+serde_json = "1"
+sha2 = "0.10"
+subtle = "2"
+tokio = { version = "1", features = ["macros", "net", "rt-multi-thread", "signal"] }
+tokio-postgres = { version = "0.7", features = ["with-chrono-0_4", "with-serde_json-1"] }
+uuid = { version = "1", features = ["v4"] }
+unicode-normalization = "0.1"
+watch-tower-core = { path = "../watch-tower-core" }
+
+[dev-dependencies]
+serde_json = "1"

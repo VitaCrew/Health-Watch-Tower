@@ -1,0 +1,17 @@
+{
+  "name": "Synthetic fall guardian push",
+  "graph": {
+    "name": "Synthetic fall guardian push",
+    "nodes": [
+      { "id": "acute-event", "kind": "trigger", "name": "Synthetic fall event" },
+      {
+        "id": "notify-guardian",
+        "kind": "tool_call",
+        "name": "Notify guardian",
+        "config": { "slug": "avatar_hsm.guardian_push", "args": {}, "execution": "once" }
+      }
+    ],
+    "edges": [{ "from_node": "acute-event", "to_node": "notify-guardian" }]
+  },
+  "require_approval": true
+}
