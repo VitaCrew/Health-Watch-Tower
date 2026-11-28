@@ -17,10 +17,6 @@
   <a href="#작동-방식"><strong>작동 방식</strong></a>
 </p>
 
-<p align="center">
-  <img src="vitacrew-overview.png" width="880" alt="Vitacrew가 구상하는 AI 건강팀 콘셉트 이미지">
-</p>
-
 ## Overview
 
 Health Watch Tower는 개인 건강정보, 의료기관 진료정보, 외부 정보를 한곳에 모아 AI가 일상 건강관리에 활용할 수 있도록 연결합니다.
