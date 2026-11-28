@@ -25,7 +25,7 @@
     <text class="step" text-anchor="middle" x="122" y="178">활용</text>
     <text class="intro" x="211" y="44">
       <tspan x="211">웨어러블과 직접 입력으로 남긴 개인 건강정보, 연동된 의료기관 진료정보,</tspan>
-      <tspan x="211" dy="24">운동 기록에 포함된 기온·습도 등 외부 정보를 모읍니다.</tspan>
+      <tspan x="211" dy="24">식품·의약품 정보와 피트니스 앱 운동 이력 등 외부 정보를 모읍니다.</tspan>
     </text>
     <text class="intro" x="211" y="104">
       <tspan x="211">Health Watch Tower가 기록을 검증하고 개인 건강 상태에 반영합니다.</tspan>
@@ -40,7 +40,7 @@
   <g id="data">
     <rect x="52" y="232" width="288" height="420" rx="11" fill="#fff"/>
     <path d="M63 232h266a11 11 0 0 1 11 11v41H52v-41a11 11 0 0 1 11-11z" fill="#b9d4f6"/>
-    <text class="panel-title" text-anchor="middle" x="196" y="265">수집 가능 데이터</text>
+    <text class="panel-title" text-anchor="middle" x="196" y="265">데이터</text>
 
     <g transform="translate(73 313)">
       <rect width="52" height="52" rx="8" fill="#daebfa"/>
@@ -71,15 +71,15 @@
     <g transform="translate(73 527)">
       <rect width="52" height="52" rx="8" fill="#daebfa"/>
       <g class="icon" transform="translate(10 10)">
-        <circle cx="9" cy="10" r="4.5"/>
-        <path d="M9 2v2M9 16v2M1 10h2m12 0h2M3.5 4.5 5 6m8 8 1.5 1.5M3.5 15.5 5 14m8-8 1.5-1.5"/>
-        <path d="M16 28a5 5 0 0 1 0-10 7 7 0 0 1 13 2.5A3.8 3.8 0 0 1 28 28Z"/>
+        <path d="M0 32h32M2 29V20h5m1 9V16C8 7.7 13.9 1 22 1v28m0-15h9v15"/>
+        <path d="M11.5 14v1m0 3v1m0 3v1m0 3v1m3.5-17v1m0 3v1m0 3v1m0 3v1m0 3v1m4-21v1m0 3v1m0 3v1m0 3v1m0 3v1m0 3v1m7-11v1m0 3v1m0 3v1m3-9v1m0 3v1m0 3v1"/>
       </g>
     </g>
     <text class="section-title" x="137" y="543">외부 정보</text>
     <text class="detail" x="137" y="567">
-      <tspan x="137">• 운동 중 환경 정보</tspan>
-      <tspan x="137" dy="22">• 기온·습도</tspan>
+      <tspan x="137">• 식약처 식품·의약품 정보</tspan>
+      <tspan x="137" dy="22">• 국내외 식품 영양·바코드</tspan>
+      <tspan x="137" dy="22">• 피트니스 앱 운동 이력</tspan>
     </text>
   </g>
 
