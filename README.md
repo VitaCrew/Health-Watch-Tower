@@ -21,8 +21,6 @@
 
 Health Watch Tower는 개인 건강정보, 의료기관 진료정보, 외부 정보를 한곳에 모아 AI가 일상 건강관리에 활용할 수 있도록 연결합니다.
 
-[![수집 가능 데이터에서 Health Watch Tower와 AI를 거쳐 활용 서비스로 이어지는 개요. 의료기관 진료정보, 개인 건강정보, 외부 정보를 모아 기록을 검증하고 건강 상태에 반영합니다. AI는 기록을 조회하고 일상 건강관리, 후속 확인 및 담당자 검토에 활용합니다.](docs/assets/health-watch-tower-overview.svg)](docs/assets/health-watch-tower-overview.svg)
-
 **예시** · 운동을 마치고 AI에 이렇게 말할 수 있어요.
 
 > **나**　오늘 스쿼트 40kg으로 8회씩 2세트 했어. 기록해줘.
