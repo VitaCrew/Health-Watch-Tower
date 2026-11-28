@@ -25,57 +25,7 @@
 
 Health Watch Tower는 개인 건강정보, 의료기관 진료정보, 외부 정보를 한곳에 모아 AI가 일상 건강관리에 활용할 수 있도록 연결합니다.
 
-| 단계 | 어떻게 작동하나요? |
-| --- | --- |
-| **수집** | 수면·운동·식사·복약 등 개인 건강정보, 연동된 의료기관의 진료정보, 운동 기록에 포함된 기온·습도 등 외부 정보를 모읍니다. |
-| **연결** | Watch Tower가 들어온 기록을 검증하고 개인 건강 상태에 반영해 AI가 활용할 수 있도록 연결합니다. |
-| **활용** | AI가 예정된 계획과 실제 수행을 연결합니다. 지난 기록을 다음 확인에 다시 사용하거나 권한이 있는 담당자에게 검토를 요청할 수 있습니다. |
-
-```mermaid
-flowchart LR
-    subgraph Sources["수집 가능 데이터"]
-        direction TB
-        Clinical["`**의료기관 진료정보**
-        진료·검사 기록
-        처방·알레르기`"]
-        Personal["`**개인 건강정보**
-        수면·운동·식사·복약
-        웨어러블·직접 기록`"]
-        External["`**외부 정보**
-        운동 중 환경 정보
-        기온·습도`"]
-        Clinical ~~~ Personal ~~~ External
-    end
-
-    Hub(("`**Health Watch**
-    **Tower**
-    기록 검증·상태 갱신
-
-    **AI**
-    기록 조회·수행 기록`"))
-
-    subgraph Services["활용 서비스"]
-        direction TB
-        Records["`**건강정보 모아보기**
-        건강·진료 기록 조회
-        검사 결과 확인`"]
-        Routine["`**일상 건강관리**
-        운동·식사·복약 관리
-        계획과 수행 비교`"]
-        FollowUp["`**후속 확인과 검토**
-        지난 수행 확인
-        담당자 검토 요청`"]
-        Records ~~~ Routine ~~~ FollowUp
-    end
-
-    Sources --> Hub --> Services
-    classDef card fill:#fff,stroke:#fff,color:#172b3a
-    classDef hub fill:#eef9f6,stroke:#4e928c,stroke-width:2px,color:#163539
-    class Clinical,Personal,External,Records,Routine,FollowUp card
-    class Hub hub
-    style Sources fill:#eff5ff,stroke:#a8bee3,color:#173248
-    style Services fill:#f3efff,stroke:#b9afe1,color:#292349
-```
+[![수집 가능 데이터에서 Health Watch Tower와 AI를 거쳐 활용 서비스로 이어지는 개요. 의료기관 진료정보, 개인 건강정보, 외부 정보를 모아 기록을 검증하고 건강 상태에 반영합니다. AI는 기록을 조회하고 일상 건강관리, 후속 확인 및 담당자 검토에 활용합니다.](docs/assets/health-watch-tower-overview.svg)](docs/assets/health-watch-tower-overview.svg)
 
 **예시** · 운동을 마치고 AI에 이렇게 말할 수 있어요.
 
