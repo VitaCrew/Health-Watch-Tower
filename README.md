@@ -51,7 +51,7 @@ curl.exe -f http://127.0.0.1:17842/healthz
 
 ### AI 연결
 
-로컬 **Watch Tower MCP** 주소는 `http://127.0.0.1:17842/mcp`입니다. AI는 이 인터페이스를 통해 건강 계획을 조회하고 수행을 기록합니다.
+로컬 **Watch Tower MCP** 주소는 `http://127.0.0.1:17842/mcp`입니다. AI 에이전트는 이 인터페이스로 건강 계획을 조회하고, 수행을 기록하고, Timetable에서 개인 건강 기록을 함께 봅니다.
 
 개인 기록을 사용하려면 [계정 연결, 동의 및 OpenFGA 관계](docs/local-setup.md#개인-기록-접근-권한)를 먼저 설정합니다. 오늘 운동 계획을 준비한 뒤 AI에 **“오늘 운동 계획 보여줘”**라고 요청하면 등록된 운동 종목과 목표 세트·횟수를 확인할 수 있습니다.
 
@@ -76,29 +76,48 @@ curl.exe -f http://127.0.0.1:17842/healthz
 ```mermaid
 flowchart TD
     AI["AI 에이전트"] -->|"/mcp"| MCP["Watch Tower MCP"]
+    Workflow["기존 AI Agent Cron · Workflow<br/>응답·미응답·기한 관리"] -->|"확정된 결과"| MCP
     MCP -->|"권한 검사"| Access["권한 · 동의 · 감사"]
-    Access -->|"계획 연결"| Plan["계획과 실제 수행 연결"]
-    Access -->|"직접 기록"| Record["기록 검증과 상태 갱신"]
-    Plan -->|"연결한 기록"| Record
+    Access -->|"통합 조회"| Timetable["Timetable"]
+    Access -->|"계획 조회·연결"| Plan["계획과 기록 연결"]
+    Access -->|"기록·정정·삭제 요청"| Record["기록 검증"]
+    Plan -->|"계획과 버전 연결"| Record
+    Access -->|"검토 요청 등록"| Followup["후속 업무와 담당자 배정"]
 
-    Record -.->|"검증된 기록"| Decision["건강 기록 판정"]
-    Rules["규칙 검토와 배포"] -.->|"승인된 규칙 보관"| Store["Watch Tower PostgreSQL"]
-    Decision -.->|"판정 결과 저장"| Store
-    Store -.->|"활성 규칙 버전"| Decision
+    subgraph DB["DB"]
+        PlanData[("Plan · 계획")]
+        Original[("Record · 개인 건강 기록<br/>personal_health_record")]
+        Revision[("기록 변경 이력")]
+        StateEvent[("이벤트 저널 · 전달 대기열")]
+        RuleData[("규칙 버전 · 평가 이력")]
+    end
 
-    Store -.->|"상태 이벤트"| HSM["HSM · 개인 건강 상태"]
-    Store -.->|"검토 요청 전달"| Followup["후속 업무 등록과 담당자 배정"]
-    Store -.->|"당시 입력과 규칙 버전"| Replay["과거 판정 재현과 후보 규칙 시험"]
-    Followup -->|"후속 확인 실행"| Workflow["AI 에이전트의 Cron · Workflow"]
+    Plan -->|"계획과 버전 조회"| PlanData
+    PlanData ---|"계획 ID · 버전"| Original
+    Timetable -->|"발생 시각으로 공통 조회"| Original
+    Record -->|"저장 · 정정 · 삭제 표시"| Original
+    Record -->|"버전과 삭제 여부 보관"| Revision
+    Record -->|"같은 트랜잭션에서 변경 이벤트 기록"| StateEvent
+    StateEvent -->|"상태 이벤트 적용 · 전달 재시도"| HSM["HSM · 개인 건강 상태 갱신"]
+    Followup -->|"배정된 검토 실행"| Workflow
+
+    Original -.->|"버전을 지정한 기록"| Decision["규칙 관리와 평가"]
+    Decision -.->|"규칙과 평가 결과 저장"| RuleData
+    RuleData -.->|"활성 규칙"| Decision
+    RuleData -.->|"당시 입력과 규칙 버전"| Replay["과거 판정 재현과 후보 규칙 시험"]
+    RuleData -.->|"평가에서 생성한 상태 이벤트"| StateEvent
+    RuleData -.->|"평가에서 생성한 검토 요청"| Followup
 ```
 
-실선은 현재 연결, 점선은 목표 설계의 연결입니다.
+실선은 런타임 코드에 연결된 경로를, 점선은 규칙 평가와 자동 후속 확인의 목표 설계를 나타냅니다.
 
-AI가 공통 `/mcp`에서 계획을 조회하고 실제 수행을 기록합니다. Watch Tower는 권한과 동의를 확인하고, 연결할 계획이 있으면 계획 ID와 버전을 기록에 남깁니다. 기기에서 들어온 관측이나 계획 없이 남긴 기록도 검증을 거칩니다. **HSM(Health State Machine)**은 확정된 상태 변경을 개인 건강 상태에 반영합니다.
+Watch Tower는 권한과 동의를 확인한 뒤 운동·식사·복약·수면 원본을 `watch_tower.personal_health_record`에 저장합니다. 계획이 있는 수행 기록은 해당 계획의 ID와 버전에 연결합니다. **Timetable**(`get_personal_health_timeline`)은 공통 원본을 발생 시각 순서로 읽고 연결된 계획과 기록 유형별 정보를 함께 보여줍니다. 삭제 표시된 원본은 조회 결과에서 제외합니다.
 
-**AI가 후속 확인을 진행하고 필요할 때 담당자 검토를 요청합니다.** Watch Tower는 검토 요청을 기록에 연결하고 현재 동의와 권한을 확인해 담당자를 배정합니다. 예약된 확인은 AI의 Cron이 시작하고 Workflow가 응답·미응답과 확인 기한을 관리합니다. 새로 확인한 건강 사실은 MCP를 통해 다시 기록합니다.
+정정·삭제는 원본의 버전과 변경 이력에 남습니다. 변경 경로에 따라 이벤트를 같은 트랜잭션에서 저널에 기록하거나 전달 대기열에 저장합니다. Watch Tower는 대기열에 저장된 이벤트의 전달을 재시도할 수 있습니다. **HSM(Health State Machine)**은 이벤트를 적용해 개인 건강 상태를 갱신합니다.
 
-### 건강 기록을 확인하는 기준
+기존 **AI Agent Workflow**가 확인 응답·미응답과 기한을 실행에 남깁니다. 예약된 확인은 Cron이 시작하고, 확정된 기록은 MCP로 공통 원본에 저장합니다. 담당자 검토가 필요하면 Watch Tower가 검토 요청을 기록에 연결하고 현재 동의와 권한을 확인해 배정한 뒤 Workflow로 실행합니다.
+
+### 규칙 관리와 평가
 
 앞으로는 검증을 마친 건강 기록을 미리 정한 기준에 따라 살펴봅니다. 그 결과를 개인 건강 상태에 반영하고, 추가 확인이 필요하면 담당자 검토로 연결합니다.
 
