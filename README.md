@@ -47,7 +47,8 @@ flowchart LR
         Clinical ~~~ Personal ~~~ External
     end
 
-    Hub(("`**Health Watch Tower**
+    Hub(("`**Health Watch**
+    **Tower**
     기록 검증·상태 갱신
 
     **AI**
@@ -55,13 +56,13 @@ flowchart LR
 
     subgraph Services["활용 서비스"]
         direction TB
-        Records["`**내 건강정보 모아보기**
+        Records["`**건강정보 모아보기**
         건강·진료 기록 조회
         검사 결과 확인`"]
-        Routine["`**내 건강 스스로 챙기기**
+        Routine["`**일상 건강관리**
         운동·식사·복약 관리
         계획과 수행 비교`"]
-        FollowUp["`**후속 확인과 검토**
+        FollowUp["`**후속 확인과 검토**
         지난 수행 확인
         담당자 검토 요청`"]
         Records ~~~ Routine ~~~ FollowUp
