@@ -35,35 +35,35 @@ Health Watch Tower는 개인 건강정보, 의료기관 진료정보, 외부 정
 flowchart LR
     subgraph Sources["수집 가능 데이터"]
         direction TB
-        Clinical["`**의료기관 진료정보**
-        진료기록 · 검사 결과
-        처방 · 알레르기`"]
-        Personal["`**개인 건강정보**
-        수면 · 운동 · 식사 · 복약
-        웨어러블 및 직접 기록`"]
-        External["`**외부 정보**
-        운동 기록에 포함된
-        기온 · 습도 등 환경 정보`"]
+        Clinical["`**의료기관 진료정보**
+        진료·검사 기록
+        처방·알레르기`"]
+        Personal["`**개인 건강정보**
+        수면·운동·식사·복약
+        웨어러블·직접 기록`"]
+        External["`**외부 정보**
+        운동 중 환경 정보
+        기온·습도`"]
         Clinical ~~~ Personal ~~~ External
     end
 
-    Hub(("`**Health Watch Tower**
-    기록 검증 · 건강 상태 갱신
+    Hub(("`**Health Watch Tower**
+    기록 검증·상태 갱신
 
     **AI**
-    건강 기록 조회 · 수행 기록`"))
+    기록 조회·수행 기록`"))
 
     subgraph Services["활용 서비스"]
         direction TB
-        Records["`**내 건강정보 모아보기**
-        일상 건강 기록과
-        진료·검사 기록 확인`"]
-        Routine["`**내 건강 스스로 챙기기**
-        운동 · 식사 · 복약 관리
-        계획과 실제 수행 비교`"]
-        FollowUp["`**다음 확인과 담당자 검토**
-        지난 수행 다시 확인
-        담당자에게 검토 요청`"]
+        Records["`**내 건강정보 모아보기**
+        건강·진료 기록 조회
+        검사 결과 확인`"]
+        Routine["`**내 건강 스스로 챙기기**
+        운동·식사·복약 관리
+        계획과 수행 비교`"]
+        FollowUp["`**후속 확인과 검토**
+        지난 수행 확인
+        담당자 검토 요청`"]
         Records ~~~ Routine ~~~ FollowUp
     end
 
